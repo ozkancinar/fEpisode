@@ -29,13 +29,15 @@ public class ListViewAdapter extends BaseAdapter {
     ArrayList<String> dizi_posterleri;
     LayoutInflater inflater;
     MainActivity active;
-    public ListViewAdapter(Context context, ArrayList<String> dizi_adlari, ArrayList<String> dizi_aciklamalari, ArrayList<String> dizi_posterleri) {
+    String mode;
+    public ListViewAdapter(Context context, ArrayList<String> dizi_adlari, ArrayList<String> dizi_aciklamalari, ArrayList<String> dizi_posterleri, String mode) {
         super();
         this.context = context;
         this.dizi_adlari = dizi_adlari;
         this.dizi_aciklamalari = dizi_aciklamalari;
         this.dizi_posterleri = dizi_posterleri;
         this.inflater = LayoutInflater.from(context);
+        this.mode = mode;
     }
 
     @Override
@@ -66,15 +68,28 @@ public class ListViewAdapter extends BaseAdapter {
         txt_diziAciklama.setText(dizi_aciklamalari.get(position));
         new DownloadImageTask(img_poster).execute(dizi_posterleri.get(position));
 
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if(mode.equals("main")){
+            btnAdd.setImageResource(R.drawable.addicon2);
+            btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     btnAdd.setImageResource(R.drawable.remove);
                     Toast.makeText(context,"Takibe Alındı",Toast.LENGTH_LONG).show();
-            }
+                }
 
-        });
+            });
+        }else if(mode.equals("detay")){
+            btnAdd.setImageResource(R.drawable.eye);
+            btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    btnAdd.setImageResource(R.drawable.remove);
+                    Toast.makeText(context,"Bölüm İzlendi",Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        }
+
 
 
 

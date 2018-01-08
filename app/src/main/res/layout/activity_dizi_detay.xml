@@ -7,6 +7,7 @@
     tools:context="com.example.ozkan.fepisode.DiziDetay">
 
     <TabHost
+        android:id="@+id/tabHost_dizi"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="70dp"

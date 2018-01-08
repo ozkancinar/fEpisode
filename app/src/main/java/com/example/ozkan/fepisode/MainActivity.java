@@ -44,17 +44,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        txt1 = (TextView) findViewById(R.id.text1);
         btnSearch = (Button) findViewById(R.id.btn1);
         edttext = (EditText) findViewById(R.id.edtxt1);
         listView = (ListView) findViewById(R.id.list_diziler);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.select_dialog_item,fruits);
-        AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.autoTxt1);
-
-        actv.setThreshold(1);
-        actv.setAdapter(adapter);
+                android.R.layout.select_dialog_item,fruits); // autocomplete için adapter
 
 
         //new FetchImdb().execute();
@@ -69,13 +64,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 getImdbId();
 
-                adapter = new ListViewAdapter(MainActivity.this,dizi_adlari,dizi_aciklamalari,poster_linkleri);
+                adapter = new ListViewAdapter(MainActivity.this,dizi_adlari,dizi_aciklamalari,poster_linkleri, "main");
                 listView.setAdapter(adapter);
                 listView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Intent intent = new Intent(MainActivity.this, DiziDetay.class);
+                        intent.putExtra("imdbID",imdbId);
+                        intent.putExtra("sezonlar", sezonSayisi);
                         startActivity(intent);
                     }
                 });
