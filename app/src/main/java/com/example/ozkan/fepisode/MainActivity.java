@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 getImdbId();
 
-                adapter = new ListViewAdapter(MainActivity.this,dizi_adlari,dizi_aciklamalari,poster_linkleri, "main");
+                adapter = new ListViewAdapter(MainActivity.this,dizi_adlari,dizi_aciklamalari,poster_linkleri, "main",imdbId);
                 listView.setAdapter(adapter);
                 listView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

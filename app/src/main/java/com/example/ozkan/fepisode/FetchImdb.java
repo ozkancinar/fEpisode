@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * Created by ozkan on 12/6/17.
  */
 
-public class FetchImdb extends AsyncTask {
+public class FetchImdb extends AsyncTask <String, Void, dizi>{
     ArrayList<String> airDate = new ArrayList<>();
     ArrayList<String> array = new ArrayList<>();
     ArrayList<String> titleArray = new ArrayList<>();
@@ -24,13 +24,19 @@ public class FetchImdb extends AsyncTask {
     ArrayList<String> imageArray = new ArrayList<>();
 
     String URL;
-    public FetchImdb(String ID) {
+    public FetchImdb(String ID, String sezon) {
         // Örnek sorgu= this.URL = "http://www.imdb.com/title/"+ID+"/episodes?season=1"
-        this.URL = "http://www.imdb.com/title/"+ID+"/episodes";
+        this.URL = "http://www.imdb.com/title/"+ID+"/episodes?season="+sezon;
     }
 
     @Override
-    protected Object doInBackground(Object[] objects) {
+    protected void onPostExecute(dizi dizi) {
+        super.onPostExecute(dizi);
+    }
+
+    @Override
+    protected dizi doInBackground(String... strings) {
+        dizi dizi = new dizi();
         try {
             Log.e("fetch",URL);
             Document doc = Jsoup.connect(URL).get();
@@ -77,19 +83,14 @@ public class FetchImdb extends AsyncTask {
                 imageArray.add(img.attr("src"));
             }
 
+            dizi.setTitleArray(this.titleArray);
+            dizi.setAirDate(this.airDate);
+            dizi.setDescArray(this.descArray);
+            dizi.setImageArray(this.imageArray);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(Object o) {
-        super.onPostExecute(o);
-        String temp = "";
-        for(String a:airDate){
-            temp += a+"\n";
-        }
-        Log.i("air", temp);
+        return dizi;
     }
 }

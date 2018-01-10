@@ -1,11 +1,14 @@
 package com.example.ozkan.fepisode;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.ozkan.fepisode.db.MyDbHelper;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,9 +33,11 @@ public class ListViewAdapter extends BaseAdapter {
     ArrayList<String> dizi_aciklamalari;
     ArrayList<String> dizi_posterleri;
     LayoutInflater inflater;
+    String imdbid;
     MainActivity active;
     String mode;
-    public ListViewAdapter(Context context, ArrayList<String> dizi_adlari, ArrayList<String> dizi_aciklamalari, ArrayList<String> dizi_posterleri, String mode) {
+    private MyDbHelper myDbHelper;
+    public ListViewAdapter(Context context, ArrayList<String> dizi_adlari, ArrayList<String> dizi_aciklamalari, ArrayList<String> dizi_posterleri, String mode, String imdbid) {
         super();
         this.context = context;
         this.dizi_adlari = dizi_adlari;
@@ -38,10 +45,35 @@ public class ListViewAdapter extends BaseAdapter {
         this.dizi_posterleri = dizi_posterleri;
         this.inflater = LayoutInflater.from(context);
         this.mode = mode;
+        this.imdbid = imdbid;
     }
 
     @Override
     public int getCount() {
+
+        if(dizi_adlari==null || dizi_adlari.equals(null)){
+            Log.e("null","asd");
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }else{
+
+        }
         return dizi_adlari.size();
     }
 
@@ -56,7 +88,7 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         inflater = LayoutInflater.from(context);
         View itemView = inflater.inflate(R.layout.custom_listview,parent,
                 false);
@@ -67,19 +99,42 @@ public class ListViewAdapter extends BaseAdapter {
         txt_diziAdi.setText(dizi_adlari.get(position));
         txt_diziAciklama.setText(dizi_aciklamalari.get(position));
         new DownloadImageTask(img_poster).execute(dizi_posterleri.get(position));
-
+        myDbHelper = new MyDbHelper(context);
         if(mode.equals("main")){
-            btnAdd.setImageResource(R.drawable.addicon2);
+            Cursor cursor = myDbHelper.tumDiziler();
+            cursor.moveToFirst();
+            while (cursor.moveToNext()){
+                Log.i("cursor",cursor.getString(2).toString());
+            }
+            boolean durum;
+            durum = myDbHelper.isWatched(imdbid);
+            if(durum){
+                btnAdd.setImageResource(R.drawable.remove);
+            }else{
+                btnAdd.setImageResource(R.drawable.addicon1);
+            }
+
             btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    btnAdd.setImageResource(R.drawable.remove);
-                    Toast.makeText(context,"Takibe Alındı",Toast.LENGTH_LONG).show();
+                    boolean sonuc;
+                    sonuc = myDbHelper.insertData(dizi_adlari.get(position),imdbid);
+                    if(sonuc){
+                        btnAdd.setImageResource(R.drawable.remove);
+                        Toast.makeText(context,"Takibe Alındı",Toast.LENGTH_LONG).show();
+                    }
+
                 }
 
             });
         }else if(mode.equals("detay")){
-            btnAdd.setImageResource(R.drawable.eye);
+            txt_diziAdi.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+            if(myDbHelper.isWatched(imdbid)){
+                btnAdd.setImageResource(R.drawable.eyep32px);
+            }else{
+                btnAdd.setImageResource(R.drawable.remove);
+            }
+
             btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

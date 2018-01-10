@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.ozkan.fepisode.MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.example.ozkan.fepisode.MainActivity">
 
     <EditText
         android:id="@+id/edtxt1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Dizi Adı"/>
+        android:hint="Dizi Adı" />
+
     <Button
         android:id="@+id/btn1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ara"/>
+        android:text="Ara" />
 
     <ListView
         android:id="@+id/list_diziler"
