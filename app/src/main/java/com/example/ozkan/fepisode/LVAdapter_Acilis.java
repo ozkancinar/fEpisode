@@ -1,8 +1,8 @@
 package com.example.ozkan.fepisode;
 
-import android.app.ProgressDialog;
+import android.app.ListActivity;
+import android.app.LoaderManager;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,25 +27,24 @@ import java.util.ArrayList;
  * Created by ozkan on 4/9/17.
  */
 
-public class ListViewAdapter extends BaseAdapter {
+public class LVAdapter_Acilis extends BaseAdapter {
     Context context;
     ArrayList<String> dizi_adlari;
     ArrayList<String> dizi_aciklamalari;
     ArrayList<String> dizi_posterleri;
+    ArrayList<String> dizi_imdbid;
     LayoutInflater inflater;
-    String imdbid;
     MainActivity active;
-    String mode;
     private MyDbHelper myDbHelper;
-    public ListViewAdapter(Context context, ArrayList<String> dizi_adlari, ArrayList<String> dizi_aciklamalari, ArrayList<String> dizi_posterleri, String mode, String imdbid) {
+    public LVAdapter_Acilis(Context context, ArrayList<String> dizi_adlari, ArrayList<String> dizi_aciklamalari,
+                            ArrayList<String> dizi_posterleri, ArrayList<String> dizi_imdbid) {
         super();
         this.context = context;
         this.dizi_adlari = dizi_adlari;
         this.dizi_aciklamalari = dizi_aciklamalari;
         this.dizi_posterleri = dizi_posterleri;
         this.inflater = LayoutInflater.from(context);
-        this.mode = mode;
-        this.imdbid = imdbid;
+        this.dizi_imdbid = dizi_imdbid;
     }
 
     @Override
@@ -96,60 +95,14 @@ public class ListViewAdapter extends BaseAdapter {
         TextView txt_diziAciklama = (TextView)itemView.findViewById(R.id.txt_diziAciklama);
         final ImageView img_poster = (ImageView)itemView.findViewById(R.id.img_poster);
         final ImageButton btnAdd = (ImageButton) itemView.findViewById(R.id.btn_add);
-        txt_diziAdi.setText(dizi_adlari.get(position));
+
+            txt_diziAdi.setText(dizi_adlari.get(position));
+
+
         txt_diziAciklama.setText(dizi_aciklamalari.get(position));
         new DownloadImageTask(img_poster).execute(dizi_posterleri.get(position));
-        myDbHelper = new MyDbHelper(context);
-        if(mode.equals("main")){
-            // Dizinin izlenip izlenilmediğini kontrol ediyoruz
-            /*Cursor cursor = myDbHelper.tumDiziler();
-            cursor.moveToFirst();
-            while (cursor.moveToNext()){
-                Log.i("cursor",cursor.getString(2).toString());
-            }
-            boolean durum;
-            durum = myDbHelper.isWatched(imdbid);
-            if(durum){
-                btnAdd.setImageResource(R.drawable.remove);
-            }else{
-                btnAdd.setImageResource(R.drawable.addicon1);
 
-            }*/
-            btnAdd.setVisibility(View.INVISIBLE);
-            /*btnAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    boolean sonuc;
-                    sonuc = myDbHelper.insertData(dizi_adlari.get(position),imdbid);
-                    if(sonuc){
-                        btnAdd.setImageResource(R.drawable.remove);
-                        Toast.makeText(context,"Takibe Alındı",Toast.LENGTH_LONG).show();
-                    }
-
-                }
-
-            });*/
-        }else if(mode.equals("detay")){
-            txt_diziAdi.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-            if(myDbHelper.isWatched(imdbid)){
-                btnAdd.setImageResource(R.drawable.eyep32px);
-            }else{
-                btnAdd.setImageResource(R.drawable.remove);
-            }
-
-            btnAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    btnAdd.setImageResource(R.drawable.remove);
-                    Toast.makeText(context,"Bölüm İzlendi",Toast.LENGTH_SHORT).show();
-                }
-
-            });
-        }
-
-
-
-
+        btnAdd.setVisibility(View.INVISIBLE);
         return itemView;
     }
 

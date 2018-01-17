@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:id="@+id/linearS1"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="0.13">
+
+        <ImageView
+            android:id="@+id/img_bolum_poster"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="20dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitStart" />
+
+        <LinearLayout
+            android:id="@+id/linearS2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/linearS3"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_bolumAdi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:text="Video1"
+                    android:textColor="@android:color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_bolumAciklama"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:text="video1"
+                    android:textColor="#606060"
+                    android:textSize="14dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearS4"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical"
+                >
+
+                <ImageButton
+                    android:id="@+id/btn_bolumAdd"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="0.5"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="4dp"
+                    android:src="@drawable/eyep32px" />
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

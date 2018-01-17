@@ -1,6 +1,7 @@
 package com.example.ozkan.fepisode;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,7 +18,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ozkan.fepisode.db.MyDbHelper;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private TextView txt1, txt2;
@@ -36,9 +40,13 @@ public class MainActivity extends AppCompatActivity {
 
     // ListView değişkenleri
     ListViewAdapter adapter;
+    LVAdapter_Acilis adapter_acilis;
     ArrayList<String> dizi_adlari;
-    ArrayList<String> dizi_aciklamalari;
+    ArrayList<String> dizi_aciklamalari, dizi_sabitAciklamalari;
     ArrayList<String> poster_linkleri;
+    ArrayList<String> dizi_imdbid;
+    ArrayList<Integer> dizi_sezonSayisi;
+    MyDbHelper myDbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,9 +61,58 @@ public class MainActivity extends AppCompatActivity {
 
 
         //new FetchImdb().execute();
-
+        acilis();
         Search();
+    }
 
+    private void acilis() {
+        dizi_adlari = new ArrayList<>();
+        dizi_aciklamalari = new ArrayList<>();
+        poster_linkleri = new ArrayList<>();
+        dizi_imdbid = new ArrayList<>();
+        dizi_sezonSayisi = new ArrayList<>();
+        dizi_sabitAciklamalari = new ArrayList<>();
+        myDbHelper = new MyDbHelper(this);
+        Cursor cursor = myDbHelper.tumDiziler();
+
+        if(cursor!=null && cursor.getCount()>0){
+           // Log.e("cursor", String.valueOf(cursor.getCount()));
+            cursor.moveToFirst();
+            do {
+                Log.e("isim1", cursor.getString(1).toString().trim());
+
+                dizi_imdbid.add(cursor.getString(2).toString()); // IMDB ID
+                dizi_adlari.add(cursor.getString(1).toString());
+
+                List<Integer> listem = myDbHelper.sonIzlenenBolum(cursor.getString(2));
+                dizi_aciklamalari.add("\n Season: " + listem.get(0).toString() + " Episode: "+listem.get(1).toString());
+                dizi_sabitAciklamalari.add(cursor.getString(3));
+                poster_linkleri.add(cursor.getString(4).toString());
+                dizi_sezonSayisi.add(Integer.valueOf(cursor.getString(5)));
+            } while (cursor.moveToNext());
+            cursor.close();
+
+        }
+
+        adapter_acilis = new LVAdapter_Acilis(MainActivity.this,dizi_adlari,dizi_aciklamalari,
+                poster_linkleri,dizi_imdbid);
+        listView.setAdapter(adapter_acilis);
+        listView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, DiziDetay.class);
+                intent.putExtra("imdbID",dizi_imdbid.get(i));
+                Log.e("click", String.valueOf(i));
+                Log.e("click", dizi_adlari.get(i));
+                intent.putExtra("sezonlar", dizi_sezonSayisi.get(i));
+                intent.putExtra("diziAdi", dizi_adlari.get(i));
+                intent.putExtra("diziAciklama", dizi_aciklamalari.get(i));
+                intent.putExtra("diziImg", poster_linkleri.get(i));
+                startActivity(intent);
+            }
+        });
     }
 
     public void Search(){
@@ -73,6 +130,9 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, DiziDetay.class);
                         intent.putExtra("imdbID",imdbId);
                         intent.putExtra("sezonlar", sezonSayisi);
+                        intent.putExtra("diziAdi", dizi_adlari.get(0));
+                        intent.putExtra("diziAciklama", dizi_aciklamalari.get(0));
+                        intent.putExtra("diziImg", poster_linkleri.get(0));
                         startActivity(intent);
                     }
                 });

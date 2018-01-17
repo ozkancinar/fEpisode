@@ -20,7 +20,7 @@ public class DiziDetay extends AppCompatActivity {
     ArrayList<Intent> intentList;
     private TabHost tabHost;
     //private Intent intent;
-    String imdbID;
+    String imdbID, diziAdi, diziAciklama, diziImg;
     int sezonSayisi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +42,9 @@ public class DiziDetay extends AppCompatActivity {
         Intent myIntent = getIntent();
         imdbID = myIntent.getStringExtra("imdbID");
         sezonSayisi = myIntent.getIntExtra("sezonlar",0);
+        diziAdi = myIntent.getStringExtra("diziAdi");
+        diziAciklama = myIntent.getStringExtra("diziAciklama");
+        diziImg = myIntent.getStringExtra("diziImg");
 
         // TabHost oluştur
         tabHost = (TabHost)findViewById(R.id.tabHost_dizi);
@@ -52,9 +55,13 @@ public class DiziDetay extends AppCompatActivity {
         // Dizinin sezon sayısı kadar sekme oluştur
         for(int i=1;i<=sezonSayisi;i++){
             TabHost.TabSpec tabspec = tabHost.newTabSpec("t"+i);
-            Intent intent = new Intent(this, DiziDetay_inner.class);
-            intent.putExtra("val",i);
+            Intent intent = new Intent(this, DiziDetay_inner.class); // Intent olustur
+            intent.putExtra("sezon",i);
             intent.putExtra("imdbid",imdbID);
+            intent.putExtra("diziAdi", diziAdi);
+            intent.putExtra("diziAciklama", diziAciklama);
+            intent.putExtra("diziImg", diziImg);
+            intent.putExtra("toplamSezon", sezonSayisi);
             // Dizinin yalnızca birinci sezonunun verilerini çek
             if(i==1){
                 dizi dizi1 = new dizi();
@@ -70,15 +77,15 @@ public class DiziDetay extends AppCompatActivity {
                 intent.putExtra("descs", dizi1.getDescArray());
                 intent.putExtra("imgs", dizi1.getImageArray());
             }
-
             tabspec.setContent(intent);
-            intentList.add(intent);
+            intentList.add(intent); // daha sonra erismek icin itentlistesine kele
             tabspec.setIndicator(String.valueOf(i));
 
             tabHost.addTab(tabspec);
 
         }
         tabHost.setCurrentTab(0);
+
         // Dizi bilgilerini çeken thread
         FetchThread fetchThread = new FetchThread(imdbID,sezonSayisi,intentList);
         fetchThread.start();
@@ -87,6 +94,7 @@ public class DiziDetay extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Geri butonuna tıklandıgında yapılacak işlemler
         switch (item.getItemId()) {
             case android.R.id.home:
                 // todo: goto back activity from here

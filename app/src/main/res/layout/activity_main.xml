@@ -7,17 +7,24 @@
     android:orientation="vertical"
     tools:context="com.example.ozkan.fepisode.MainActivity">
 
-    <EditText
-        android:id="@+id/edtxt1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Dizi Adı" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ara" />
+        <EditText
+            android:id="@+id/edtxt1"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="Dizi Adı" />
+
+        <Button
+            android:id="@+id/btn1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Ara" />
+    </LinearLayout>
+
 
     <ListView
         android:id="@+id/list_diziler"
