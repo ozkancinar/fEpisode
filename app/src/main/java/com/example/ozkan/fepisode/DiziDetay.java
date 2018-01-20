@@ -21,7 +21,7 @@ public class DiziDetay extends AppCompatActivity {
     private TabHost tabHost;
     //private Intent intent;
     String imdbID, diziAdi, diziAciklama, diziImg;
-    int sezonSayisi;
+    int sezonSayisi, acilisSezon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Context işlemleri
@@ -45,7 +45,7 @@ public class DiziDetay extends AppCompatActivity {
         diziAdi = myIntent.getStringExtra("diziAdi");
         diziAciklama = myIntent.getStringExtra("diziAciklama");
         diziImg = myIntent.getStringExtra("diziImg");
-
+        acilisSezon = Integer.parseInt(myIntent.getStringExtra("acilisSezon"));
         // TabHost oluştur
         tabHost = (TabHost)findViewById(R.id.tabHost_dizi);
         LocalActivityManager mlam = new LocalActivityManager(this, false);
@@ -84,11 +84,12 @@ public class DiziDetay extends AppCompatActivity {
             tabHost.addTab(tabspec);
 
         }
-        tabHost.setCurrentTab(0);
 
+        tabHost.setCurrentTab(0);
         // Dizi bilgilerini çeken thread
         FetchThread fetchThread = new FetchThread(imdbID,sezonSayisi,intentList);
         fetchThread.start();
+
 
     }
 

@@ -1,6 +1,7 @@
 package com.example.ozkan.fepisode;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -18,6 +19,7 @@ public class RestClient {
 
     public static void get(Context context, String url, Header[] headers, RequestParams params,
                            AsyncHttpResponseHandler responseHandler){
+        client.cancelAllRequests(true);
         client.get(context, url, headers, params, responseHandler);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.ozkan.fepisode;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
@@ -36,12 +37,10 @@ public class WebService {
         this.context = context;
         this.TITLE = TITLE;
         search();
-        Log.i("tit", imdbId);
-
+        Log.e("tit", imdbId);
     }
 
     public void search() {
-
                 List<Header> headers = new ArrayList<>();
                 headers.add(new BasicHeader("Accept", "application/json"));
 
@@ -54,13 +53,32 @@ public class WebService {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 try {
-
+                                    if(response != null || response.length() != 0){
                                     String idM = response.get("imdbID").toString();
                                     diziAd = response.get("Title").toString();
                                     diziAciklama = response.get("Year").toString() + "    IMDB: " + response.get("imdbRating").toString();
                                     imdbId = idM;
-                                    sezonSayisi = Integer.parseInt(response.get("totalSeasons").toString());
+                                    Log.e("wsdiziadi", diziAd);
+
+                                    if(response.get("totalSeasons") instanceof String){
+                                        if(response.get("totalSeasons").toString().trim().equals("N/A")){
+                                            sezonSayisi = 0;
+                                        }else{
+                                            sezonSayisi = Integer.parseInt(response.get("totalSeasons").toString());
+                                        }
+                                    }else{
+                                        sezonSayisi = 0;
+                                    }
                                     diziPoster = response.get("Poster").toString();
+                                        MainActivity mainActivity = ((MainActivity) context);
+                                        Intent intent = new Intent(mainActivity, DiziDetay.class);
+                                        intent.putExtra("imdbID",imdbId);
+                                        intent.putExtra("sezonlar", sezonSayisi);
+                                        intent.putExtra("diziAdi", diziAd);
+                                        intent.putExtra("diziAciklama", diziAciklama);
+                                        intent.putExtra("diziImg", diziPoster);
+                                        mainActivity.startActivity(intent);
+                                    }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

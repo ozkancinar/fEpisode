@@ -141,9 +141,9 @@ public class MyDbHelper extends SQLiteOpenHelper {
         if(cursor!=null && cursor.getCount()>0){
             cursor.moveToFirst();
             do{
-                Log.e("cursors", String.valueOf(cursor.getInt(0)));
                if(cursor.getInt(0)>sezon){
                    sezon=cursor.getInt(0);
+                   bolum=0;
                    if(cursor.getInt(1)>bolum)
                        bolum=cursor.getInt(1);
                }else if(cursor.getInt(0)==sezon){
