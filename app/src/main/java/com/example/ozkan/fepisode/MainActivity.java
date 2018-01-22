@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
 
                 dizi_imdbid.add(cursor.getString(2).toString()); // IMDB ID
                 dizi_adlari.add(cursor.getString(1).toString());
-
                 List<Integer> listem = myDbHelper.sonIzlenenBolum(cursor.getString(2));
                 dizi_aciklamalari.add("\n Season: " + listem.get(0).toString() + " Episode: "+listem.get(1).toString());
                 dizi_sabitAciklamalari.add(cursor.getString(3));
@@ -142,14 +141,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MainActivity.this, DiziDetay.class);
+
                 intent.putExtra("imdbID",dizi_imdbid.get(i));
-                String[] array = dizi_aciklamalari.get(1).split(" ");
-                Log.e("click", dizi_adlari.get(i));
+                String[] array = dizi_aciklamalari.get(i).split(" ");
+                Log.e("click", array[1]);
                 intent.putExtra("sezonlar", dizi_sezonSayisi.get(i));
                 intent.putExtra("diziAdi", dizi_adlari.get(i));
                 intent.putExtra("diziAciklama", dizi_aciklamalari.get(i));
                 intent.putExtra("diziImg", poster_linkleri.get(i));
-                intent.putExtra("acilisSezon", array[2]);
+                intent.putExtra("acilisSezon", Integer.parseInt(array[2]));
                 startActivity(intent);
             }
         });

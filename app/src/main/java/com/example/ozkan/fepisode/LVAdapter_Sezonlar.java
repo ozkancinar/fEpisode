@@ -38,7 +38,7 @@ public class LVAdapter_Sezonlar extends BaseAdapter {
     String mode, diziAciklama, diziImg;
     int sezon;
     private MyDbHelper myDbHelper;
-
+    FetchThread fetchThread;
     public LVAdapter_Sezonlar(Context context, ArrayList<String> bolum_adlari, ArrayList<String> bolum_aciklamalari, ArrayList<String> bolum_posterleri, String mode,
                               String imdbid, int sezon, ArrayList<Boolean> bolumIzlenen, String diziAdi, String diziAciklama, String diziImg, int toplamSezon) {
         super();
@@ -97,8 +97,9 @@ public class LVAdapter_Sezonlar extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, ViewGroup parent) {
         // tanımlar
+        fetchThread = new FetchThread(imdbid, toplamSezon, context); // Tüm bölümleri kaydet
         inflater = LayoutInflater.from(context);
         View itemView = inflater.inflate(R.layout.custom_lv_sezonlar,parent,
                 false);
@@ -146,6 +147,8 @@ public class LVAdapter_Sezonlar extends BaseAdapter {
                     Log.e("dizi_kayitli = ", String.valueOf(dizi_kayitli));
                     if(!dizi_kayitli){
                         myDbHelper.insertData(diziAdi,imdbid, diziAciklama, diziImg, toplamSezon); // eger kaydedilmediyse veri tabanına kaydet
+
+                        fetchThread.start();
                     }
                     if(sonuc){
                         bolum_izlenen.set(position,true);

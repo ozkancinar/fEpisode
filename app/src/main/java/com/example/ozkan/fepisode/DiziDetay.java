@@ -1,6 +1,8 @@
 package com.example.ozkan.fepisode;
 
 import android.app.LocalActivityManager;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +12,10 @@ import android.widget.TabHost;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class DiziDetay extends AppCompatActivity {
     ArrayList<String> airDate;
@@ -45,7 +51,7 @@ public class DiziDetay extends AppCompatActivity {
         diziAdi = myIntent.getStringExtra("diziAdi");
         diziAciklama = myIntent.getStringExtra("diziAciklama");
         diziImg = myIntent.getStringExtra("diziImg");
-        acilisSezon = Integer.parseInt(myIntent.getStringExtra("acilisSezon"));
+        acilisSezon = myIntent.getIntExtra("acilisSezon",0);
         // TabHost oluştur
         tabHost = (TabHost)findViewById(R.id.tabHost_dizi);
         LocalActivityManager mlam = new LocalActivityManager(this, false);
@@ -76,6 +82,7 @@ public class DiziDetay extends AppCompatActivity {
                 intent.putExtra("titles",dizi1.getTitleArray());
                 intent.putExtra("descs", dizi1.getDescArray());
                 intent.putExtra("imgs", dizi1.getImageArray());
+
             }
             tabspec.setContent(intent);
             intentList.add(intent); // daha sonra erismek icin itentlistesine kele
@@ -87,9 +94,43 @@ public class DiziDetay extends AppCompatActivity {
 
         tabHost.setCurrentTab(0);
         // Dizi bilgilerini çeken thread
-        FetchThread fetchThread = new FetchThread(imdbID,sezonSayisi,intentList);
-        fetchThread.start();
+        //FetchThread fetchThread = new FetchThread(imdbID,sezonSayisi,intentList);
+        //fetchThread.start();
 
+        final ExecutorService executor = Executors.newFixedThreadPool(3);
+        for (int i=2;i<=sezonSayisi;i++){
+            executor.submit(new FetchSingleThread(imdbID,i,intentList));
+        }
+        executor.shutdown();
+
+
+        final ProgressDialog ringProgressDialog = ProgressDialog.show(this, "Please wait ...",	"Opening...", true);
+        ringProgressDialog.setCancelable(true);
+        new Thread(new Runnable() {
+            private volatile boolean running = true;
+            @Override
+            public void run() {
+                while (running){
+                    try {
+                        // Here you should write your time consuming task...
+                        // Let the progress ring for 10 seconds...
+                        Thread.sleep(100);
+                    } catch (Exception e) {
+
+                    }
+                    if(executor.isTerminated()){
+                        running = false;
+                        ringProgressDialog.dismiss();
+                    }
+                }
+
+            }
+
+            public void shutDown(){
+                ringProgressDialog.dismiss();
+                running = false;
+            }
+        }).start();
 
     }
 

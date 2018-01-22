@@ -18,6 +18,23 @@ public class dizi {
     private String episodes;
     private String imdbid;
     private int sezonSayisi;
+    private int sezon, bolum;
+
+    public int getSezon() {
+        return sezon;
+    }
+
+    public void setSezon(int sezon) {
+        this.sezon = sezon;
+    }
+
+    public int getBolum() {
+        return bolum;
+    }
+
+    public void setBolum(int bolum) {
+        this.bolum = bolum;
+    }
 
     public int getSezonSayisi() {
         return sezonSayisi;

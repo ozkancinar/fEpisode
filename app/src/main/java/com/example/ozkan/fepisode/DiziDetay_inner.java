@@ -47,6 +47,8 @@ public class DiziDetay_inner extends Activity{
         diziAciklama = intent.getStringExtra("diziAciklama");
         diziImg = intent.getStringExtra("diziImg");
         toplamSezon = intent.getIntExtra("toplamSezon",0);
+        boolean finish = intent.getBooleanExtra("finish",false);
+
 
         myDbHelper = new MyDbHelper(this);
         for(int i=0;i<bolumAdlari.size();i++){

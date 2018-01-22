@@ -29,23 +29,27 @@ public class MyDbHelper extends SQLiteOpenHelper {
     private static final String TABLE_BOLUM = "bolumler";
     private static final String B_COL_3 = "bolum_sezon";
     private static final String B_COL_4 = "bolum_bolum";
-
+    private static final String B_COL_5 = "bolum_adi";
+    private static final String B_COL_6 = "bolum_aciklama";
+    private static final String B_COL_7 = "bolum_img";
+    private static final String TABLE_TUMBOLUMLER = "tumbolumler";
 
     public MyDbHelper(Context context) {
-        super(context, DB_NAME, null, 8);
+        super(context, DB_NAME, null, 10);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table "+TABLE_NAME+"(dizi_id INTEGER PRIMARY KEY AUTOINCREMENT, dizi_adi TEXT, dizi_imdbid TEXT, dizi_aciklama TEXT, dizi_img TEXT, dizi_sezon INTEGER)");
         db.execSQL("create table "+TABLE_BOLUM+"(dizi_id INTEGER PRIMARY KEY AUTOINCREMENT, dizi_adi TEXT, dizi_imdbid TEXT, bolum_sezon INTEGER, bolum_bolum INTEGER)");
-
+        db.execSQL("create table "+TABLE_TUMBOLUMLER+"(dizi_id INTEGER PRIMARY KEY AUTOINCREMENT, bolum_adi TEXT, dizi_imdbid TEXT ,bolum_aciklama TEXT, bolum_img TEXT ,bolum_sezon INTEGER, bolum_bolum INTEGER)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOLUM);
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE_TUMBOLUMLER);
         onCreate(db);
 
     }
@@ -157,6 +161,44 @@ public class MyDbHelper extends SQLiteOpenHelper {
         liste.add(bolum);
 
         return liste;
+    }
+
+    // Favori dizinin tüm bölümlerini kaydet
+    public boolean tumBolumleriKaydet(String dizi_imdbid, String bolum_adi, String bolum_aciklama,
+                                      String bolum_img, int bolum_sezon, int bolum_bolum){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL2, dizi_imdbid);
+        values.put(B_COL_5, bolum_adi);
+        values.put(B_COL_6, bolum_aciklama);
+        values.put(B_COL_7, bolum_img);
+        values.put(B_COL_3, bolum_sezon);
+        values.put(B_COL_4, bolum_bolum);
+        long result = sqLiteDatabase.insert(TABLE_TUMBOLUMLER,null,values);
+        if (result==-1)
+            return false;
+        else{
+            sqLiteDatabase.close();
+            return true;
+        }
+    }
+
+    // Favori dizinin tüm bölümlerini getir
+    public List<dizi> tumBolumleriGetir(String imdbid){
+        List<dizi> diziList = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("Select bolum_adi, bolum_aciklama, bolum_img, bolum_sezon, bolum_bolum from " + TABLE_TUMBOLUMLER +" WHERE dizi_imdbid = '"+imdbid+"'", null);
+        cursor.moveToFirst();
+        do {
+            dizi dizi = new dizi();
+            dizi.setTitle(cursor.getString(0));
+            dizi.setDescription(cursor.getString(1));
+            dizi.setImgSrc(cursor.getString(2));
+            dizi.setSezon(cursor.getInt(3));
+            dizi.setBolum(cursor.getInt(4));
+            diziList.add(dizi);
+        }while (cursor.moveToNext());
+        return diziList;
     }
 
 }
