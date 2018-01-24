@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,6 +22,7 @@
         </activity>
         <activity android:name=".DiziDetay"></activity>
         <activity android:name=".DiziDetay_inner"></activity>
+        <activity android:name=".DiziDetay_Kayitli"></activity>
     </application>
 
 </manifest>

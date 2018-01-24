@@ -61,7 +61,6 @@ public class LVAdapter_Sezonlar extends BaseAdapter {
     public int getCount() {
 
         if(bolum_adlari==null || bolum_adlari.equals(null)){
-            Log.e("null","asd");
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -144,7 +143,6 @@ public class LVAdapter_Sezonlar extends BaseAdapter {
                 }else{ // bolum izlenmediyse
                     boolean sonuc = myDbHelper.bolumKaydet(bolum_adlari.get(position), imdbid, sezon, (position+1));
                     boolean dizi_kayitli = myDbHelper.isWatched(imdbid); // dizi daha önce kaydedildi mi?
-                    Log.e("dizi_kayitli = ", String.valueOf(dizi_kayitli));
                     if(!dizi_kayitli){
                         myDbHelper.insertData(diziAdi,imdbid, diziAciklama, diziImg, toplamSezon); // eger kaydedilmediyse veri tabanına kaydet
 

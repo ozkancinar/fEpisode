@@ -37,7 +37,6 @@ public class WebService {
         this.context = context;
         this.TITLE = TITLE;
         search();
-        Log.e("tit", imdbId);
     }
 
     public void search() {

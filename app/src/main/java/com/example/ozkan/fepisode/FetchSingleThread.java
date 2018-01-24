@@ -34,7 +34,6 @@ public class FetchSingleThread extends Thread {
                 e.printStackTrace();
             }
             Intent intent = intentList.get(sezonSayisi-1);
-            Log.i("index", String.valueOf(sezonSayisi));
             intent.putExtra("titles",dizi1.getTitleArray());
             intent.putExtra("descs", dizi1.getDescArray());
             intent.putExtra("imgs", dizi1.getImageArray());

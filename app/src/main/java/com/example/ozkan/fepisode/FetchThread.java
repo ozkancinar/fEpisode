@@ -36,7 +36,7 @@ public class FetchThread extends Thread {
     @Override
     public void run() {
         myDbHelper = new MyDbHelper(context);
-        for(int i=1;i<sezonSayisi;i++) {
+        for(int i=1;i<=sezonSayisi;i++) {
             dizi dizi1 = new dizi();
             FetchImdb fetch1 = new FetchImdb(imdbID, String.valueOf(i));
             try {
@@ -52,7 +52,7 @@ public class FetchThread extends Thread {
                         dizi1.getImageArray().get(j),i,j);
 
             }
-            Log.e("Kayit Tamam", "Sezon "+String.valueOf(i));
+            Log.i("Kayit Tamam", "Sezon "+String.valueOf(i));
 
             /*
             Intent intent = intentList.get(i);

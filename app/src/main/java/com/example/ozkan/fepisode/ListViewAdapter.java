@@ -95,60 +95,9 @@ public class ListViewAdapter extends BaseAdapter {
         TextView txt_diziAdi = (TextView)itemView.findViewById(R.id.txt_diziAdi);
         TextView txt_diziAciklama = (TextView)itemView.findViewById(R.id.txt_diziAciklama);
         final ImageView img_poster = (ImageView)itemView.findViewById(R.id.img_poster);
-        final ImageButton btnAdd = (ImageButton) itemView.findViewById(R.id.btn_add);
         txt_diziAdi.setText(dizi_adlari.get(position));
         txt_diziAciklama.setText(dizi_aciklamalari.get(position));
         new DownloadImageTask(img_poster).execute(dizi_posterleri.get(position));
-        myDbHelper = new MyDbHelper(context);
-        if(mode.equals("main")){
-            // Dizinin izlenip izlenilmediğini kontrol ediyoruz
-            /*Cursor cursor = myDbHelper.tumDiziler();
-            cursor.moveToFirst();
-            while (cursor.moveToNext()){
-                Log.i("cursor",cursor.getString(2).toString());
-            }
-            boolean durum;
-            durum = myDbHelper.isWatched(imdbid);
-            if(durum){
-                btnAdd.setImageResource(R.drawable.remove);
-            }else{
-                btnAdd.setImageResource(R.drawable.addicon1);
-
-            }*/
-            btnAdd.setVisibility(View.INVISIBLE);
-            /*btnAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    boolean sonuc;
-                    sonuc = myDbHelper.insertData(dizi_adlari.get(position),imdbid);
-                    if(sonuc){
-                        btnAdd.setImageResource(R.drawable.remove);
-                        Toast.makeText(context,"Takibe Alındı",Toast.LENGTH_LONG).show();
-                    }
-
-                }
-
-            });*/
-        }else if(mode.equals("detay")){
-            txt_diziAdi.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-            if(myDbHelper.isWatched(imdbid)){
-                btnAdd.setImageResource(R.drawable.eyep32px);
-            }else{
-                btnAdd.setImageResource(R.drawable.remove);
-            }
-
-            btnAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    btnAdd.setImageResource(R.drawable.remove);
-                    Toast.makeText(context,"Bölüm İzlendi",Toast.LENGTH_SHORT).show();
-                }
-
-            });
-        }
-
-
-
 
         return itemView;
     }

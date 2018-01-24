@@ -38,7 +38,6 @@ public class FetchImdb extends AsyncTask <String, Void, dizi>{
     protected dizi doInBackground(String... strings) {
         dizi dizi = new dizi();
         try {
-            Log.e("fetch",URL);
             Document doc = Jsoup.connect(URL).get();
             Elements div = doc.select("div.list.detail.eplist > div.list_item");
             Elements dates = div.select("div.info > div.airdate");

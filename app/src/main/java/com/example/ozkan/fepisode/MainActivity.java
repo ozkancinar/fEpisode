@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -47,13 +48,13 @@ public class MainActivity extends AppCompatActivity {
     //String title = "";
 
     // ListView değişkenleri
-    ListViewAdapter adapter;
     LVAdapter_Acilis adapter_acilis;
     ArrayList<String> dizi_adlari;
     ArrayList<String> dizi_aciklamalari, dizi_sabitAciklamalari;
     ArrayList<String> poster_linkleri;
     ArrayList<String> dizi_imdbid;
     ArrayList<Integer> dizi_sezonSayisi;
+
     MyDbHelper myDbHelper;
 
     // CustomAutoComplete
@@ -70,7 +71,10 @@ public class MainActivity extends AppCompatActivity {
 
         createCustomAutoComplete();
         acilis();
+        longPress();
     }
+
+
 
 
     private void createCustomAutoComplete() {
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 dizi_imdbid.add(cursor.getString(2).toString()); // IMDB ID
                 dizi_adlari.add(cursor.getString(1).toString());
                 List<Integer> listem = myDbHelper.sonIzlenenBolum(cursor.getString(2));
-                dizi_aciklamalari.add("\n Season: " + listem.get(0).toString() + " Episode: "+listem.get(1).toString());
+                dizi_aciklamalari.add("Season: " + listem.get(0).toString() + " Episode: "+listem.get(1).toString());
                 dizi_sabitAciklamalari.add(cursor.getString(3));
                 poster_linkleri.add(cursor.getString(4).toString());
                 dizi_sezonSayisi.add(Integer.valueOf(cursor.getString(5)));
@@ -140,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainActivity.this, DiziDetay.class);
+                Intent intent = new Intent(MainActivity.this, DiziDetay_Kayitli.class);
 
                 intent.putExtra("imdbID",dizi_imdbid.get(i));
                 String[] array = dizi_aciklamalari.get(i).split(" ");
@@ -149,14 +153,14 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("diziAdi", dizi_adlari.get(i));
                 intent.putExtra("diziAciklama", dizi_aciklamalari.get(i));
                 intent.putExtra("diziImg", poster_linkleri.get(i));
-                intent.putExtra("acilisSezon", Integer.parseInt(array[2]));
+                intent.putExtra("acilisSezon", Integer.parseInt(array[1]));
                 startActivity(intent);
             }
         });
     }
 
     public void Search(final String title){
-        Log.e("Search", title);
+        Log.i("Search", title);
         WebService service = new WebService(MainActivity.this, title.trim().replace(" ","+"));
         /*
         getImdbId(title);
@@ -202,11 +206,18 @@ public class MainActivity extends AppCompatActivity {
                 poster_linkleri.add(service.diziPoster);
                 sezonSayisi = service.sezonSayisi;
                 Log.i("imdbid", imdbId);
-                Log.e("name", String.valueOf(dizi_adlari.get(0)));
 
     }
 
-
+    private void longPress() {
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("hello","hell");
+                return true;
+            }
+        });
+    }
 }
 
 

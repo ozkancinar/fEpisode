@@ -38,7 +38,7 @@ public class WebServiceA {
         this.context = context;
         this.TITLE = TITLE;
         //search();
-        Log.e("tit", imdbId);
+        Log.i("id", imdbId);
     }
 
     public void search() {
@@ -124,7 +124,7 @@ public class WebServiceA {
             dizi dizi = new dizi();
             dizi.setTitle(diziAd);
             dizi.setDescription(diziAciklama);
-            Log.e("dafuck", dizi.getDescription());
+            Log.e("daman", dizi.getDescription());
             return dizi;*/
             }
 

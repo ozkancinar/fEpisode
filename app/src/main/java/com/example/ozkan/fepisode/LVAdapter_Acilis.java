@@ -94,15 +94,12 @@ public class LVAdapter_Acilis extends BaseAdapter {
         TextView txt_diziAdi = (TextView)itemView.findViewById(R.id.txt_diziAdi);
         TextView txt_diziAciklama = (TextView)itemView.findViewById(R.id.txt_diziAciklama);
         final ImageView img_poster = (ImageView)itemView.findViewById(R.id.img_poster);
-        final ImageButton btnAdd = (ImageButton) itemView.findViewById(R.id.btn_add);
 
             txt_diziAdi.setText(dizi_adlari.get(position));
-
 
         txt_diziAciklama.setText(dizi_aciklamalari.get(position));
         new DownloadImageTask(img_poster).execute(dizi_posterleri.get(position));
 
-        btnAdd.setVisibility(View.INVISIBLE);
         return itemView;
     }
 
